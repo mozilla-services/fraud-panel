@@ -1,0 +1,6 @@
+{
+  "source" : "https://go.mozilla.org/fraud-panel", 
+  "version": "0.0.0", 
+  "commit" : "deadbeef",
+  "build"  : "https://circleci.com/mozilla-services/fraud-panel"
+}
