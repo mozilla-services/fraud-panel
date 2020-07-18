@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"math/rand"
 	"net/http"
 	"time"
 )
@@ -27,6 +28,23 @@ func addToContext(r *http.Request, key contextKey, value interface{}) *http.Requ
 	return r.WithContext(context.WithValue(ctx, key, value))
 }
 
+// setRequestID is a middleware the generates a random ID for each request processed
+// by the HTTP server. The request ID is added to the request context and used to
+// track various information and correlate logs.
+func setRequestID() Middleware {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			rid := make([]rune, 16)
+			letters := []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+			for i := range rid {
+				rid[i] = letters[rand.Intn(len(letters))]
+			}
+
+			h.ServeHTTP(w, addToContext(r, contextKeyRequestID, string(rid)))
+		})
+	}
+}
+
 // getRequestID retrieves an ID from the request context, or returns "-" is none is found
 func getRequestID(r *http.Request) string {
 	val, ok := r.Context().Value(contextKeyRequestID).(string)
@@ -34,6 +52,15 @@ func getRequestID(r *http.Request) string {
 		return val
 	}
 	return "-"
+}
+
+// setRequestStartTime stores a timestamp of the time a request arrived
+func setRequestStartTime() Middleware {
+	return func(h http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			h.ServeHTTP(w, addToContext(r, contextKeyRequestStartTime, time.Now()))
+		})
+	}
 }
 
 // getRequestStartTime retrieves a start time from the request context,
