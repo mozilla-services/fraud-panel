@@ -21,7 +21,7 @@ func dfHeartbeat(w http.ResponseWriter, r *http.Request) {
 	defer dbCancel()
 	err := db.CheckConnectionContext(dbCheckCtx)
 	if err == nil {
-		mozlog.Info("db heartbeat completed successfully", mozlog.Fields{
+		mozlog.Event("db heartbeat completed successfully", mozlog.Fields{
 			"rid":     getRequestID(r),
 			"t":       int32(time.Since(dbHeartbeatStartTs) / time.Millisecond),
 			"timeout": dbCheckTimeout.String(),

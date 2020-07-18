@@ -72,7 +72,7 @@ func Connect(config Config) error {
 	if err != nil {
 		return err
 	}
-	mozlog.Info("database connection established", nil)
+	mozlog.Info("database connection established")
 	return nil
 }
 
@@ -93,7 +93,7 @@ func CheckConnectionContext(ctx context.Context) error {
 // Monitor queries the database every pollInterval and kills the program
 // if it becomes unavailable
 func Monitor(pollInterval time.Duration) {
-	mozlog.Info("starting DB monitor polling every "+pollInterval.String(), nil)
+	mozlog.Info("starting DB monitor polling every %s", pollInterval)
 	for {
 		err := CheckConnectionContext(context.Background())
 		if err != nil {

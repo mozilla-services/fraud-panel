@@ -28,7 +28,7 @@ func logRequest() Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			h.ServeHTTP(w, r)
-			mozlog.Info("request", mozlog.Fields{
+			mozlog.Event("request", mozlog.Fields{
 				"method":             r.Method,
 				"proto":              r.Proto,
 				"remoteAddress":      r.RemoteAddr,

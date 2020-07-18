@@ -19,7 +19,7 @@ func main() {
 	}
 	err := db.Connect(dbcfg)
 	if err != nil {
-		mozlog.Info(err.Error(), nil)
+		log.Println(err)
 		os.Exit(10)
 	}
 	go db.Monitor(60 * time.Second)
@@ -39,6 +39,7 @@ func main() {
 			logRequest(),
 		),
 	}
+	mozlog.Info("fraud-panel api server listening on %s", listen)
 	err = server.ListenAndServe()
 	if err != nil {
 		log.Fatal(err)
