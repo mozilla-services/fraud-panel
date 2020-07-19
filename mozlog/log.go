@@ -23,7 +23,9 @@ type Entry struct {
 // Fields adds a map of fields to a log entry
 type Fields map[string]interface{}
 
-var hostname string
+var (
+	hostname string
+)
 
 func init() {
 	var err error
