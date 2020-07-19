@@ -29,8 +29,8 @@ func addToContext(r *http.Request, key contextKey, value interface{}) *http.Requ
 }
 
 // setRequestID is a middleware the generates a random ID for each request processed
-// by the HTTP server. The request ID is added to the request context and used to
-// track various information and correlate logs.
+// by the HTTP server. The request ID is added to the request context and to the
+// response headers and used to track various information and correlate logs.
 func setRequestID() Middleware {
 	return func(h http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -39,7 +39,7 @@ func setRequestID() Middleware {
 			for i := range rid {
 				rid[i] = letters[rand.Intn(len(letters))]
 			}
-
+			w.Header().Add("X-Request-ID", string(rid))
 			h.ServeHTTP(w, addToContext(r, contextKeyRequestID, string(rid)))
 		})
 	}

@@ -89,3 +89,29 @@ func TestMiddlewareSetResponseHeaders(t *testing.T) {
 		t.Errorf("expected 'Strict-Transport-Security' response header not found")
 	}
 }
+
+func TestMiddlewareSetRequestID(t *testing.T) {
+	rids := make(map[string]bool)
+	ts := httptest.NewServer(handleMiddlewares(http.HandlerFunc(dfLbHeartbeat), setRequestID()))
+	defer ts.Close()
+
+	for i := 0; i < 1000; i++ {
+		res, err := http.Get(ts.URL)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if res.StatusCode != http.StatusOK {
+			t.Errorf("expected http response code 200 but got %d", res.StatusCode)
+		}
+		t.Logf("%+v\n", res.Header)
+		if _, ok := res.Header["X-Request-Id"]; !ok {
+			t.Errorf("expected 'X-Request-Id' response header not found")
+			break
+		}
+		rid := res.Header["X-Request-Id"][0]
+		if _, ok := rids[rid]; ok {
+			t.Errorf("request id collision detected for %q", rid)
+		}
+		rids[rid] = true
+	}
+}
