@@ -39,7 +39,7 @@ func setRequestID() Middleware {
 			for i := range rid {
 				rid[i] = letters[rand.Intn(len(letters))]
 			}
-			w.Header().Add("X-Request-ID", string(rid))
+			w.Header().Add("X-Request-Id", string(rid))
 			h.ServeHTTP(w, addToContext(r, contextKeyRequestID, string(rid)))
 		})
 	}
