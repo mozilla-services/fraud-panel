@@ -26,6 +26,25 @@ func main() {
 
 	listen := "0.0.0.0:8000"
 	mux := http.NewServeMux()
+	mux.HandleFunc("/account", func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodGet:
+			getAccount(w, r)
+			return
+		case http.MethodPost:
+			createAccount(w, r)
+			return
+		case http.MethodPut:
+			updateAccount(w, r)
+			return
+		case http.MethodDelete:
+			deleteAccount(w, r)
+			return
+		default:
+			http.NotFound(w, r)
+			return
+		}
+	})
 	mux.Handle("/__version__", http.HandlerFunc(dfVersion))
 	mux.Handle("/__heartbeat__", http.HandlerFunc(dfHeartbeat))
 	mux.Handle("/__lbheartbeat__", http.HandlerFunc(dfLbHeartbeat))
