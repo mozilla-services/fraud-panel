@@ -4,7 +4,6 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -51,7 +50,7 @@ func authHandler(codeVerifier string) (sessionID string, err error) {
 		if authorizationCode == "" {
 			errMsg := fmt.Sprintf("failed to obtain an authorization code from google")
 			log.Println(errMsg)
-			io.WriteString(w, errMsg)
+			w.Write([]byte(errMsg))
 			server.Close()
 			return
 		}
@@ -60,7 +59,7 @@ func authHandler(codeVerifier string) (sessionID string, err error) {
 		if err != nil {
 			errMsg := fmt.Sprintf("failed to obtain session from fraud-panel server: %v", err)
 			log.Println(errMsg)
-			io.WriteString(w, errMsg)
+			w.Write([]byte(errMsg))
 			server.Close()
 			return
 		}
