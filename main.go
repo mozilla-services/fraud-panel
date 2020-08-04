@@ -26,6 +26,7 @@ func main() {
 
 	listen := "0.0.0.0:8000"
 	mux := http.NewServeMux()
+	mux.Handle("/auth/pkce", http.HandlerFunc(oAuthPkceExchanger))
 	mux.HandleFunc("/account", func(w http.ResponseWriter, r *http.Request) {
 		switch r.Method {
 		case http.MethodGet:

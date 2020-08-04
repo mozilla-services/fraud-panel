@@ -11,6 +11,7 @@ func getAccount(w http.ResponseWriter, r *http.Request) {
 	accountID := r.FormValue("id")
 	if accountID == "" {
 		errors.ErrAccountIDMissing.HTTPError(w, r, rid)
+		return
 	}
 }
 
@@ -22,6 +23,7 @@ func updateAccount(w http.ResponseWriter, r *http.Request) {
 	accountID := r.FormValue("id")
 	if accountID == "" {
 		errors.ErrAccountIDMissing.HTTPError(w, r, rid)
+		return
 	}
 }
 
@@ -30,5 +32,6 @@ func deleteAccount(w http.ResponseWriter, r *http.Request) {
 	accountID := r.FormValue("id")
 	if accountID == "" {
 		errors.ErrAccountIDMissing.HTTPError(w, r, rid)
+		return
 	}
 }
